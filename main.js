@@ -125,8 +125,9 @@ app.get("/emp/:id", function (req, res) {
 });
 app.post("/emp", function (req, res) {
   let body = Object.values(req.body);
-  let sql = `INSERT INTO emp(empCode,name,department,designation,salary,gender)
+  let sql = `INSERT INTO emp(empCode,name,department,salary,designation,gender)
   VALUES ($1,$2,$3,$4,$5,$6)`;
+  console.log(body)
   conn.query(sql, body, function (err, result) {
     if (err) {
       res.status(400).send(err);
