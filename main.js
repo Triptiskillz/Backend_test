@@ -93,7 +93,7 @@ app.get("/emp", function (req, res) {
       arr = arr.filter((st) => st.gender === gender);
     }
     if (sort === "empCode") {
-      arr = arr.sort((s1, s2) => s1.empCode - s2.empCode);
+      arr = arr.sort((s1, s2) => s1.empcode - s2.empcode);
     }
     if (sort === "name") {
       arr = arr.sort((s1, s2) => s1.name.localeCompare(s2.name));
