@@ -1,8 +1,9 @@
 let mysql = require("mysql");
+const dotenv = require("dotenv");
+dotenv.config();
 let { Client } = require("pg");
 var express = require("express");
 var app = express();
-const path = require("path");
 
 var port = process.env.PORT || 2410;
 app.use(express.json());
@@ -21,12 +22,6 @@ app.use(function (req, res, next) {
 
 app.listen(port, () => console.log(`Node app listening on port ${port}!`));
 
-// let conn = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "",
-//   database: "company",
-// });
 const conn = new Client({
   user: "postgres",
   password: "YaOclcn7ZY7yW3K1",
@@ -39,95 +34,92 @@ conn.connect(function (res, error) {
   console.log(`Connected!!!`);
 });
 
-// app.get("/emp", function (req, res, next) {
-//   console.log("Inside /users get api");
-//   const query = ` SELECT * FROM emp;`;
-//   conn.query(query, function (err, result) {
-//     if (err) {
-//       res.status(400).send(err);
-//     }
-//     res.send(result.rows);
-//     conn.end();
-//   });
-// });
-
 // app.get("/resetData", function (req, res, next) {
-//   let sql = "DELETE FROM emp";
+//   let sql = `DELETE FROM student`;
+
 //   conn.query(sql, function (err, result) {
 //     if (err) res.status(400).send(err);
 //     else {
 //       console.log("Successfull Delete");
 //       let { empData } = require("./json.js");
-//       let arr = empData.map((p) =>[p.empCode,p.name,p.department,p.designation,p.salary,p.gender]);
-//       // let arr = [arr1];
-//       let sql = `INSERT INTO emp(empCode,name,department,designation,salary,gender) VALUES ($1,$2,$3,$4,$5,$6)`;
-//     console.log(arr)
-//     console.log(sql)
-//       conn.query(sql, arr, function (err, result) {
+//       let arr = empData.map((p) => [
+//         p.name,
+//         p.price,
+//         p.brand,
+//         p.RAM,
+//         p.ROM,
+//         p.OS,
+//       ]);
+
+//       let sql = "INSERT INTO student(name,price,brand,RAM,ROM,OS) VALUES ?";
+//       conn.query(sql, [arr], function (err, result) {
 //         if (err) res.status(400).send(err);
-//         else res.send(result);
+//         else res.send(result.rows);
 //       });
 //     }
+//     conn.end();
 //   });
 // });
 
-app.get("/emp", function (req, res) {
-  let department = req.query.department;
-  let designation = req.query.designation;
-  let gender = req.query.gender;
+app.get("/student", function (req, res) {
+  let brand = req.query.brand;
+  let RAM = req.query.RAM;
+  let ROM = req.query.ROM;
   let sort = req.query.sort;
-  let sql = "SELECT * FROM emp";
+  let sql = "SELECT * FROM student";
   conn.query(sql, function (err, result) {
     if (err) {
       res.status(400).send(err);
     }
     var arr = result.rows;
-
-    if (department) {
-      arr = arr.filter((st) => st.department === department);
+    if (brand) {
+      let brandArr = brand.split(",");
+      arr = arr.filter((st) => brandArr.find((c1) => c1 === st.brand));
     }
-    if (designation) {
-      arr = arr.filter((st) => st.designation === designation);
+    if (RAM) {
+      let RAMArr = RAM.split(",");
+      arr = arr.filter((st) => RAMArr.find((c1) => c1 === st.ram));
     }
-    if (gender) {
-      arr = arr.filter((st) => st.gender === gender);
-    }
-    if (sort === "empCode") {
-      arr = arr.sort((s1, s2) => s1.empcode - s2.empcode);
+    if (ROM) {
+      let ROMArr = ROM.split(",");
+      arr = arr.filter((st) => ROMArr.find((c1) => c1 === st.rom));
     }
     if (sort === "name") {
       arr = arr.sort((s1, s2) => s1.name.localeCompare(s2.name));
     }
-    if (sort === "department") {
-      arr = arr.sort((s1, s2) => s1.department.localeCompare(s2.department));
+    if (sort === "price") {
+      arr = arr.sort((s1, s2) => s1.price - s2.price);
     }
-    if (sort === "designation") {
-      arr = arr.sort((s1, s2) => s1.designation.localeCompare(s2.designation));
+    if (sort === "brand") {
+      arr = arr.sort((s1, s2) => s1.brand.localeCompare(s2.brand));
     }
-    if (sort === "salary") {
-      arr = arr.sort((s1, s2) => s1.salary - s2.salary);
+    if (sort === "RAM") {
+      arr = arr.sort((s1, s2) => s1.ram.localeCompare(s2.ram));
     }
-    if (sort === "gender") {
-      arr = arr.sort((s1, s2) => s1.gender.localeCompare(s2.gender));
+    if (sort === "ROM") {
+      arr = arr.sort((s1, s2) => s1.rom.localeCompare(s2.rom));
+    }
+    if (sort === "OS") {
+      arr = arr.sort((s1, s2) => s1.os.localeCompare(s2.os));
     }
     res.send(arr);
   });
 });
-app.get("/emp/:id", function (req, res) {
+app.get("/student/:id", function (req, res) {
   let id = +req.params.id;
-  let sql = "SELECT * FROM emp WHERE id=$1";
-  conn.query(sql, [id], function (err, result) {
+  let arr = [id];
+  let sql = "SELECT * FROM student WHERE id=$1";
+  conn.query(sql, arr, function (err, result) {
     if (err) {
       res.status(400).send(err);
     }
-    res.send(result);
+    res.send(result.rows);
   });
 });
-app.post("/emp", function (req, res) {
+app.post("/student", function (req, res) {
   let body = Object.values(req.body);
-  let sql = `INSERT INTO emp(empCode,name,department,salary,designation,gender)
+  let sql = `INSERT INTO student(name,price,brand,RAM,ROM,OS) 
   VALUES ($1,$2,$3,$4,$5,$6)`;
-  console.log(body)
   conn.query(sql, body, function (err, result) {
     if (err) {
       res.status(400).send(err);
@@ -136,23 +128,20 @@ app.post("/emp", function (req, res) {
   });
 });
 
-app.put("/emp/:id", function (req, res, next) {
+app.put("/student/:id", function (req, res, next) {
   let body = Object.values(req.body);
-  // let id = +req.params.id;
-  let arr=[...body]
-  let sql = `UPDATE  emp SET empcode=$2, name=$3, department=$4, salary=$5, designation=$6, gender=$7 WHERE id=$1`;
-  // console.log(arr)
-  conn.query(sql, arr, function (err, result) {
+  let sql = `UPDATE  student SET name=$2, price=$3, brand=$4, RAM=$5, ROM=$6, OS=$7 WHERE id=$1`;
+  conn.query(sql, body, function (err, result) {
     if (err) res.status(400).send(err);
     else res.send(result);
   });
 });
 
-app.delete("/emp/:id", function (req, res, next) {
+app.delete("/student/:id", function (req, res, next) {
   let id = +req.params.id;
-  let arr =[id]
-  let sql = `DELETE FROM emp WHERE id=$1`;
-  conn.query(sql,arr, function (err, result) {
+  let arr = [id];
+  let sql = `DELETE FROM student WHERE id=$1`;
+  conn.query(sql, arr, function (err, result) {
     if (err) res.status(400).send(err);
     else res.send(result);
   });
