@@ -1,0 +1,274 @@
+let express = require("express");
+let app = express();
+let axios = require("axios");
+app.use(express.json());
+app.use(function (req, res, next) {
+  req.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET",
+    "POST",
+    "OPTIONS",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "HEAD"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "Origin, X-Requested-With,Content-Type,Accept"
+  );
+  next();
+});
+
+var port = process.env.PORT || 2410;
+
+app.listen(port, () => console.log(`Node app listening on port ${port}!`));
+
+let baseURL = "https://repo-8qu2.onrender.com/productServer";
+app.get("/myserver/customers", async function (req, res) {
+  try{
+    let response = await axios.get(baseURL+"/customers");
+    console.log(response.data)
+    res.send(response.data);
+  }catch(err){
+    if(err.response){
+      let{status,statusText}= err.response;
+      console.log(status,statusText)
+      res.status(status).send(statusText)
+    }else res.status(404).send(err);
+  }
+  });
+  
+  app.get("/myserver/products",async  function (req, res) {
+    try{
+      let response = await axios.get(baseURL+"/products");
+      console.log(response.data)
+      res.send(response.data);
+    }catch(err){
+      if(err.response){
+        let{status,statusText}= err.response;
+        console.log(status,statusText)
+        res.status(status).send(statusText)
+      }else res.status(404).send(err);
+    }
+  });
+  
+  app.get("/myserver/orders", async function (req, res) {
+    let {cust,prod} = req.query
+    let params ={}
+    if(cust) params.cust=cust;
+    if(prod) params.prod =prod;
+    try{
+      let response = await axios.get(baseURL+"/orders",{params:params});
+      console.log(response.data)
+      res.send(response.data);
+    }catch(err){
+      if(err.response){
+        let{status,statusText}= err.response;
+        console.log(status,statusText)
+        res.status(status).send(statusText)
+      }else res.status(404).send(err);
+    }
+  });
+  
+  app.get("/myserver/orders/customer/:cust", async function (req, res) {
+    try{
+      let {cust} =req.params;
+      let response = await axios.get(`${baseURL}/orders/customer/${cust}`);
+      console.log(response.data)
+      res.send(response.data);
+    }catch(err){
+      if(err.response){
+        let{status,statusText}= err.response;
+        console.log(status,statusText)
+        res.status(status).send(statusText)
+      }else res.status(404).send(err);
+    }
+  });
+  
+  app.get("/myserver/orders/products/:prod",async function (req, res) {
+    try{
+      let {prod} =req.params;
+      let response = await axios.get(`${baseURL}/orders/product/${prod}`);
+      console.log(response.data)
+      res.send(response.data);
+    }catch(err){
+      if(err.response){
+        let{status,statusText}= err.response;
+        console.log(status,statusText)
+        res.status(status).send(statusText)
+      }else res.status(404).send(err);
+    }
+  });
+  app.post("/myserver/orders",async function (req, res) {
+    try{
+      let body = req.body;
+      let response = await axios.post(baseURL + "/orders",body);
+      console.log(response.data)
+      res.send(response.data);
+    }catch(err){
+      if(err.response){
+        let{status,statusText}= err.response;
+        console.log(status,statusText)
+        res.status(status).send(statusText)
+      }else res.status(404).send(err);
+    }
+  });
+  
+
+// let baseURL = "https://repo-8qu2.onrender.com/messageServer";
+
+// app.post("/myserver2/login", function (req, res) {
+//   let body = req.body;
+//   axios
+//     .post(baseURL + "/login", body)
+//     .then(function (response) {
+//       console.log(response);
+//       res.send("" + response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//         res.status(status).send(statusText);
+//       } else res.status(404).send(err);
+//     });
+// });
+
+// app.post("/myserver2/messages", function (req, res) {
+//   let token = req.header("authorization");
+//   if (!token) res.status(401).send("No token found.Provide a valid token");
+//   else {
+//     let body = req.body;
+//     axios
+//       .post(baseURL + "/messages", body, { headers: { authorization: token } })
+//       .then(function (response) {
+//         console.log(response);
+//         res.send(response.data);
+//       })
+//       .catch(function (err) {
+//         if (err.response) {
+//           let { status, statusText } = err.response;
+//           console.log(status, statusText);
+//           res.status(status).send(statusText);
+//         } else res.status(404).send(err);
+//       });
+//   }
+// });
+
+// app.get("/myserver2/messages", function (req, res) {
+//   let token = req.header("authorization") || "dummyvalue";
+//   axios
+//     .get(baseURL + "/messages", { headers: { authorization: token } })
+//     .then(function (response) {
+//       console.log(response.data);
+//       res.send(response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//         res.status(status).send(statusText);
+//       } else res.status(404).send(err);
+//     });
+// });
+
+// let baseURL = "https://repo-8qu2.onrender.com/productServer";
+
+// app.get("/myserver/customers", function (req, res) {
+//   axios
+//     .get(baseURL + "/customers")
+//     .then(function (response) {
+//       console.log(response);
+//       res.send(response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//       } else res.status(404).send(err);
+//     });
+// });
+
+// app.get("/myserver/products", function (req, res) {
+//   axios
+//     .get(baseURL + "/products")
+//     .then(function (response) {
+//       console.log(response);
+//       res.send(response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//       } else res.status(404).send(err);
+//     });
+// });
+
+// app.get("/myserver/orders", function (req, res) {
+//   let {cust,prod} = req.query
+//   let params ={}
+//   if(cust) params.cust=cust;
+//   if(prod) params.prod =prod;
+//   axios
+//     .get(baseURL + "/orders" ,{params:params})
+//     .then(function (response) {
+//       console.log(response);
+//       res.send(response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//       } else res.status(404).send(err);
+//     });
+// });
+
+// app.get("/myserver/orders/customer/:cust", function (req, res) {
+//   let {cust} =req.params;
+//   axios
+//     .get(`${baseURL}/orders/customer/${cust}`)
+//     .then(function (response) {
+//       console.log(response);
+//       res.send(response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//       } else res.status(404).send(err);
+//     });
+// });
+
+// app.get("/myserver/orders/products/:prod", function (req, res) {
+//   let {prod} =req.params;
+//   axios
+//     .get(`${baseURL}/orders/products/${prod}`)
+//     .then(function (response) {
+//       console.log(response);
+//       res.send(response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//       } else res.status(404).send(err);
+//     });
+// });
+// app.post("/myserver/orders", function (req, res) {
+//   let body = req.body;
+//   axios
+//     .post(baseURL + "/orders",body)
+//     .then(function (response) {
+//       console.log(response);
+//       res.send(response.data);
+//     })
+//     .catch(function (err) {
+//       if (err.response) {
+//         let { status, statusText } = err.response;
+//         console.log(status, statusText);
+//         res.status(status).send(statusText)
+//       } else res.status(404).send(err);
+//     });
+// });
