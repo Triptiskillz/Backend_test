@@ -21,7 +21,6 @@ app.listen(port, () => console.log(`Node app listening on port ${port}!`));
 // let baseURL = "https://repo-8qu2.onrender.com/studentServer";
 
 app.post("/apifetech", async function (req, res) {
-  // let token = req.header("authorization") || "dummyvalue";
   let body = req.body;
   console.log(body.authorization, body.keyValue);
   if (body.authorization == "") {
