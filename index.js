@@ -1,7 +1,20 @@
-let express = require("express");
-let app = express();
-let axios = require("axios");
+var express = require("express");
+const cookieParser = require("cookie-parser");
+var app = express();
+var passport = require("passport");
+var LocalStrategy = require("passport-local");
+var LocalCookie = require("passport-cookie");
+var LocalJwt = require("passport-jwt").Strategy;
+var ExtractJwt = require("passport-jwt").ExtractJwt;
+
+// var cors = require("cors");
+
+var jwt = require("jsonwebtoken");
+var jwt_key = "secretkey6864712";
+const jwtExpiryTime = 300;
+
 app.use(express.json());
+app.use(cookieParser("achgj-446321"));
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -10,145 +23,131 @@ app.use(function (req, res, next) {
   );
   res.header("Access-Control-Allow-Methods", "GET, OPTIONS, PUT, POST, DELETE");
   // res.header("Access-Control-Expose-Headers", "Authorization");
-  // res.header("Access-Control-Expose-Headers", "X-Auth-Token");
+  res.header("Access-Control-Expose-Headers", "X-Auth-Token");
   next();
 });
+
+// const corsOptions = {
+//   origin: "http://localhost:3000",
+//   credentials: true,
+//   optionSuccessStatus: 200,
+// };
+
+// app.use(cors(corsOptions));
+app.use(passport.initialize());
 
 var port = process.env.PORT || 2410;
 
 app.listen(port, () => console.log(`Node app listening on port ${port}!`));
 
-// let baseURL = "https://repo-8qu2.onrender.com/studentServer";
+let params = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: "jwtsecret4346445",
+};
+let { products, users, orders } = require("./data.js");
 
-app.post("/apifetech", async function (req, res) {
+app.get("/products", function (req, res) {
+  res.send(products);
+});
+app.get("/product/:id", function (req, res) {
+  let id = req.params.id;
+  let arr = products.find((e) => e.id == id);
+  res.send(arr);
+});
+app.get("/products/:category", function (req, res) {
+  let  category  = req.params.category;
+
+  let arr = products.filter((p) => p.category == category);
+  res.send(arr);
+});
+app.post("/register", function (req, res) {
+  let email = req.body.email;
+  let password = req.body.password;
+  let maxid = users.reduce((acc, curr) => (curr.id > acc ? curr.id : acc), 0);
+  let newid = maxid + 1;
+  let json = { id: newid, email: email, password: password };
+  users.push(json);
+  res.send(json);
+});
+
+app.post("/login", function (req, res) {
+  let { email, password } = req.body;
+  // console.log(email, password )
+  let user = users.find((u) => u.email === email && u.password === password);
+
+  if (user) {
+    let payload = { id: user.id };
+    let token = jwt.sign(payload, params.secretOrKey, {
+      algorithm: "HS256",
+      expiresIn: jwtExpiryTime,
+    });
+    // res.setHeader("X-Auth-Token",token)
+    // res.setHeader("Authorization",token)
+    let json = { token: token, id: user.id, email: user.email };
+    res.send(json);
+  } else res.sendStatus(401);
+});
+
+let strategy = new LocalJwt(params, function (token, done) {
+  console.log("In LocalJwt-all", token);
+  let user = users.find((u) => u.id == token.id);
+  console.log("User", user);
+  if (!user)
+    return done(null, false, { message: "Incorrect username or password" });
+  else return done(null, user);
+});
+
+passport.use("All", strategy);
+
+app.post("/orders", function (req, res) {
   let body = req.body;
-  console.log(body.authorization, body.keyValue);
-  if (body.authorization == "") {
-    var token = "";
-  } else {
-    token = body.keyValue;
-  }
+  orders.push(body);
+  res.send(body);
+});
 
-  if (body.method == "GET") {
+app.post("/products", function (req, res) {
+  let body = req.body;
+  let maxid = products.reduce(
+    (acc, curr) => (curr.id > acc ? curr.id : acc),
+    0
+  );
+  let newid = maxid + 1;
+  let json = { id: newid, ...body };
+  products.push(json);
+  res.send(json);
+});
+app.put("/products/:id", function (req, res) {
+  let id = req.params.id;
+  let body = req.body;
+  let index = products.findIndex((e) => e.id == id);
+  if (index >= 0) {
+    products[index] = body;
+    res.send(products[index]);
+  } else res.status(404).send("NO products found");
+});
+app.delete("/products/:id", function (req, res) {
+  let id = req.params.id;
+  let body = req.body;
+  let index = products.findIndex((e) => e.id == id);
+  if (index >= 0) {
+    let deleteProducts = products.splice(index, 1);
+
+    res.send(deleteProducts);
+  } else res.status(404).send("NO products found");
+});
+app.get(
+  "/orders",
+  passport.authenticate("All", { session: false }),
+  function (req, res) {
     try {
-      let url = body.url;
-
-      let response = await axios.get(url, {
-        headers: { authorization: token },
-      });
-      //   console.log(response.data);
-      if (url == "https://repo-8qu2.onrender.com/studentServer/getToken") {
-        // console.log("token");
-        res.send("" + response.data);
-      } else {
-        res.send(response.data);
-      }
-    } catch (err) {
+      let order = orders.filter((o) => o.email == req.user.email);
+      res.send(order);
+    } catch (ex) {
       if (err.response) {
         let { status, statusText } = err.response;
         console.log(status, statusText);
         res.status(status).send(statusText);
       } else res.status(404).send(err);
     }
-  } else if (body.method == "POST") {
-    if (token == "")
-      res.status(401).send("No token found.Provide a valid token");
-    else {
-      try {
-        let url = body.url;
-        let newbody = body.body;
-
-        let item = JSON.parse(newbody);
-        //   console.log(item)
-        let response = await axios.post(url, item, {
-          headers: { authorization: token },
-        });
-        console.log(response.data);
-        res.send(response.data);
-      } catch (err) {
-        if (err.response) {
-          let { status, statusText } = err.response;
-          console.log(status, statusText);
-          res.status(status).send(statusText);
-        } else res.status(404).send(err);
-      }
-    }
-  } else if (body.method == "PUT") {
-    if (token == "")
-      res.status(401).send("No token found.Provide a valid token");
-    else {
-      try {
-        let url = body.url;
-        let newbody = body.body;
-
-        let item = JSON.parse(newbody);
-        let response = await axios.put(url, item, {
-          headers: { authorization: token },
-        });
-        console.log(response.data);
-        res.send(response.data);
-      } catch (err) {
-        if (err.response) {
-          let { status, statusText } = err.response;
-          console.log(status, statusText);
-          res.status(status).send(statusText);
-        } else res.status(404).send(err);
-      }
-    }
-  } else if (body.method == "DELETE") {
-    if (token == "")
-      res.status(401).send("No token found.Provide a valid token");
-    else {
-      try {
-        let url = body.url;
-        let response = await axios.delete(url, {
-          headers: { authorization: token },
-        });
-        console.log(response.data);
-        res.send(response.data);
-      } catch (err) {
-        if (err.response) {
-          let { status, statusText } = err.response;
-          console.log(status, statusText);
-          res.status(status).send(statusText);
-        } else res.status(404).send(err);
-      }
-    }
   }
-});
-
-// app.post("/apifetech", async function (req, res) {
-//     let body = req.body;
-//     console.log(body);
-//     if (body.method == "GET") {
-//       try {
-//         let url = body.url;
-//         let response = await axios.get(url);
-//         console.log(response.data);
-//         res.send(response.data);
-//       } catch (err) {
-//         if (err.response) {
-//           let { status, statusText } = err.response;
-//           console.log(status, statusText);
-//           res.status(status).send(statusText);
-//         } else res.status(404).send(err);
-//       }
-//     } else if (body.method == "POST") {
-//       try {
-//         let url = body.url;
-//         let newbody = body.body;
-
-//         let item = JSON.parse(newbody)
-//       //   console.log(item)
-//         let response = await axios.post(url, item);
-//         console.log(response.data);
-//         res.send(response.data);
-//       } catch (err) {
-//         if (err.response) {
-//           let { status, statusText } = err.response;
-//           console.log(status, statusText);
-//           res.status(status).send(statusText);
-//         } else res.status(404).send(err);
-//       }
-//     }
-//   });
+);
