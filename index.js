@@ -34,6 +34,7 @@ app.use(function (req, res, next) {
 // };
 
 // app.use(cors(corsOptions));
+
 app.use(passport.initialize());
 
 var port = process.env.PORT || 2410;
@@ -44,7 +45,7 @@ let params = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: "jwtsecret4346445",
 };
-let { products, users, orders } = require("./data.js");
+let { products, users, orders,log } = require("./data.js");
 
 app.get("/products", function (req, res) {
   res.send(products);
@@ -104,6 +105,16 @@ app.post("/orders", function (req, res) {
   orders.push(body);
   res.send(body);
 });
+app.post("/log", function (req, res) {
+  let body = req.body;
+  log.push(body);
+  res.send(body);
+});
+app.get("/log", function (req, res) {
+
+  res.send(log);
+});
+
 
 app.post("/products", function (req, res) {
   let body = req.body;
