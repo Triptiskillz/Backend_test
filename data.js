@@ -175,4 +175,5 @@ let products = [
 ];
 let users = [{ id: 1, email: "nike@gmail.com", password: "1234" }];
 let orders = [];
-module.exports = { products, users, orders };
+let log=[];
+module.exports = { products, users, orders,log };
