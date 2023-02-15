@@ -1,179 +1,357 @@
-let products = [
+let movies = [
   {
     id: 1,
-    category: "Watches",
-    description:
-      "The look that made Swiss watches the toast of the world. Still unbeatable.",
-    imgLink:
-      "https://images.pexels.com/photos/125779/pexels-photo-125779.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-    name: "Silver",
-    price: 1600,
+    location: "NCR",
+    title: "Vikram",
+    image:
+      "https://img1.hotstarext.com/image/upload/f_auto,t_web_m_1x/sources/r1/cms/prod/6237/1296237-h-5662015305e4",
+    language: "Hindi",
+    genre: ["Drama", "Fantasy", "Horror"],
+    format: ["2D", "3D", "4DX"],
+    vote: "124,356,8",
+    like: 75,
+    showDate: [
+      {
+        date: "11 February",
+        place: [
+          {
+            name: "PVR Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 100,
+          },
+          {
+            name: "PVR1 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 500,
+          },
+          {
+            name: "PVR2 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 3000,
+          },
+        ],
+      },
+      {
+        date: "12 February",
+        place: [
+          {
+            name: "PVR4 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 1500,
+          },
+          {
+            name: "PVR5 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 230,
+          },
+          {
+            name: "PVR6 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 3400,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 2,
-    category: "Watches",
-    description: "Dark, black beauty. Sure to look good on the wrist.",
-    imgLink:
-      "https://images.pexels.com/photos/1697566/pexels-photo-1697566.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    name: "Black",
-    price: 899,
+    location: "Hyderabad",
+    title: "Kantara",
+    image:
+      "https://www.91-cdn.com/hub/wp-content/uploads/2022/11/movies-like-kantara-feat-1200x675.jpg",
+    language: "Punjabi",
+    genre: ["Mystery", "Romance", "Thriller"],
+    format: ["2D", "IMAX 2D", "ICE", "4DX"],
+    vote: "350,568",
+    like: 77,
+    showDate: [
+      {
+        date: "11 February",
+        place: [
+          {
+            name: "PVR7 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 230,
+          },
+          {
+            name: "PVR8 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 400,
+          },
+          {
+            name: "PVR9 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 5200,
+          },
+        ],
+      },
+      {
+        date: "12 February",
+        place: [
+          {
+            name: "PVR11 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 23,
+          },
+          {
+            name: "PVR12 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 342,
+          },
+          {
+            name: "PVR13 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 40,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 3,
-    category: "Watches",
-    description:
-      "Multi chronographs, stop watch, timers. Altimeter. What else.",
-    imgLink:
-      "https://images.pexels.com/photos/2113994/pexels id-photo-2113994.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    name: "Chronograph",
-    price: 1199,
+    location: "Ahmedabad",
+    title: "NSG",
+
+    image:
+      "https://images.indianexpress.com/2022/06/major-movie-review-1200.jpg",
+    language: "Sindhi",
+    genre: ["Action", "Comedy"],
+    format: ["2D", "3D", "IMAX 2D", "ICE"],
+    vote: "124,68",
+    like: 67,
+    showDate: [
+      {
+        date: "11 February",
+        place: [
+          {
+            name: "PVR14 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 244,
+          },
+          {
+            name: "PVR15 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 231,
+          },
+          {
+            name: "PVR16 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 342,
+          },
+        ],
+      },
+      {
+        date: "12 February",
+        place: [
+          {
+            name: "PVR17 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 245,
+          },
+          {
+            name: "PVR18 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 123,
+          },
+          {
+            name: "PVR19 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 23,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 4,
-    category: "Watches",
-    description: "For all ages. For all times. Classic Look. Classic leather.",
-    imgLink:
-      "https://images.pexels.com/photos/236915/pexels-photo-236915.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    name: "Classic",
-    price: 1250,
+    location: "NCR",
+    title: "Black Adam",
+
+    image: "https://static.hbo.com/2022-12/black-adam-ka-1920.jpg",
+    language: "Kashmiri",
+    genre: ["Mystery", "Thriller"],
+    format: ["2D", "3D", "ICE", "4DX"],
+    vote: "357,858",
+    like: 88,
+    showDate: [
+      {
+        date: "11 February",
+        place: [
+          {
+            name: "PVR Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+
+            price: 3453,
+          },
+          {
+            name: "PVR20 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 1453,
+          },
+          {
+            name: "PVR21 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 45,
+          },
+        ],
+      },
+      {
+        date: "12 February",
+        place: [
+          {
+            name: "PVR21 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 241,
+          },
+          {
+            name: "PVR22 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 2472,
+          },
+          {
+            name: "PVR23 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 235,
+          },
+        ],
+      },
+      {
+        date: "13 February",
+        place: [
+          {
+            name: "PVR24 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 453,
+          },
+          {
+            name: "PVR25 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 3440,
+          },
+          {
+            name: "PVR26 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 104,
+          },
+        ],
+      },
+    ],
   },
   {
     id: 5,
-    category: "Watches",
-    description: "The original Apple Watch. Still a great buy.",
-    imgLink:
-      "https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Apple v1",
-    price: 999,
-  },
-  {
-    id: 6,
-    category: "Watches",
-    description: "Mechanical 28 jewelled watch. Connoisseur delight.",
-    imgLink:
-      "https://images.pexels.com/photos/47339/mechanics-movement-feinmechanik-wrist-watch-47339.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    name: "Jewelled",
-    price: 1999,
-  },
-  {
-    id: 7,
-    category: "Sunglasses",
-    description: "Desirable, reddish tint. Sure to attract attention.",
-    imgLink:
-      "https://images.pexels.com/photos/46710/pexels-photo-46710.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    name: "Tinted Red",
-    price: 399,
-  },
-  {
-    id: 8,
-    category: "Sunglasses",
-    description: "Nostalgic, bluish tint, sure to get memories back. Vintage.",
-    imgLink:
-      "https://images.pexels.com/photos/701877/pexels-photo-701877.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    name: "Oldies",
-    price: 199,
-  },
-  {
-    id: 9,
-    category: "Sunglasses",
-    description: "Trendy, young sunglasses with retro look. Teen favourite.",
-    imgLink:
-      "https://images.pexels.com/photos/1362558/pexels-photo-1362558.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Youthful",
-    price: 219,
-  },
-  {
-    id: 10,
-    category: "Sunglasses",
-    description: "Chic sunglasses. Classic dark shades, sure to generate envy.",
-    imgLink:
-      "https://images.pexels.com/photos/65659/glasses-glass-circle-light-transmittance-65659.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    name: "Classic Dark",
-    price: 249,
-  },
-  {
-    id: 11,
-    category: "Watches",
-    description: "Apple Watch Version 2. A delight.",
-    imgLink:
-      "https://images.pexels.com/photos/277406/pexels-photo-277406.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Apple v2",
-    price: 1499,
-  },
-  {
-    id: 12,
-    category: "Belts",
-    description: "Stylish formal brown belt. An office favourite.",
-    imgLink:
-      "https://as1.ftcdn.net/jpg/02/14/48/72/500_F_214487233_Aahw3DohDu6dSSfMqWCcU1QDatxpDt6E.jpg",
-    name: "Fab Brown",
-    price: 149,
-  },
-  {
-    id: 13,
-    category: "Handbags",
-    description: "Desirable travel bag. Mix of convenience and style",
-    imgLink:
-      "https://images.pexels.com/photos/2534961/pexels-photo-2534961.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Travel Lite",
-    price: 199,
-  },
-  {
-    id: 14,
-    category: "Handbags",
-    description: "3 Pockets, 2 Zips -  ideal for shopping and parties",
-    imgLink:
-      "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Chic Leather",
-    price: 749,
-  },
-  {
-    id: 15,
-    category: "Belts",
-    description: "Signature belt from Gucci ",
-    imgLink:
-      "https://img.shopstyle-cdn.com/pim/c7/a6/c7a695a8db5a375b222f15bea045bdea_xlarge.jpg",
-    name: "Raw Edge",
-    price: 799,
-  },
-  {
-    id: 16,
-    category: "Belts",
-    description: "Iconic metallic belt",
-    imgLink:
-      "https://img.shopstyle-cdn.com/pim/81/78/8178fa6c3b27d3f3e0fe18d019c992ea_xlarge.jpg",
-    name: "Goofy Black",
-    price: 349,
-  },
-  {
-    id: 17,
-    category: "Sunglasses",
-    description: "Min black faded front shades",
-    imgLink:
-      "https://cdn.shopify.com/s/files/1/0898/5824/products/QUAY_HIGHKEY_Mini_BLACK_FADE_FRONT_450x.jpg",
-    name: "Quay Shades",
-    price: 479,
-  },
-  {
-    id: 18,
-    category: "Belts",
-    description: "Evergreen formal belt with classic buckle",
-    imgLink:
-      "https://as1.ftcdn.net/jpg/02/02/45/86/500_F_202458696_CYlcJbJfjgUb2VgQnPSUxHU79v6I3SC6.jpg",
-    name: "Classic Brown",
-    price: 128,
-  },
-  {
-    id: 19,
-    category: "Handbags",
-    description: "Beach handbag to go along with a beach holiday",
-    imgLink:
-      "https://images.pexels.com/photos/2305000/pexels-photo-2305000.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    name: "Funky Jute",
-    price: 99,
+    location: "NCR",
+    title: "Pathaan",
+    image: "https://www.nowrunning.com/content/movie/2022/patha-25734/bg6.jpg",
+    language: "Urdu",
+    genre: ["Drama", "Romance", "Thriller"],
+    format: ["2D", "3D", "IMAX 2D"],
+    vote: "468,675",
+    like: 72,
+    showDate: [
+      {
+        date: "11 February",
+        place: [
+          {
+            name: "PVR27 Mall,Delhi",
+            time: ["09:00 AM", "02:00 PM"],
+            price: 104,
+          },
+          {
+            name: "PVR28 Mall,Delhi",
+            time: ["12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 245,
+          },
+          {
+            name: "PVR29 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 346,
+          },
+        ],
+      },
+      {
+        date: "12 February",
+        place: [
+          {
+            name: "PVR30 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "02:00 PM"],
+            price: 352,
+          },
+          {
+            name: "PVR31 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM"],
+            price: 3215,
+          },
+          {
+            name: "PVR32 Mall,Delhi",
+            time: ["09:00 AM", "12:00 PM", "04:00 PM", "06:00 PM", "08:00 PM"],
+            price: 5252,
+          },
+        ],
+      },
+    ],
   },
 ];
-let users = [{ id: 1, email: "nike@gmail.com", password: "1234" }];
-let orders = [];
-let log=[];
-module.exports = { products, users, orders,log };
+
+let seat = [
+  {
+    movieid: 4,
+    title: "Black Adam",
+    movieHall: "PVR22 Mall,Delhi",
+    tickets: ["A1"],
+    amount: 420,
+    userid:1,
+    time: "12:00 PM",
+    date: "12 February",
+  },
+  {
+    movieid: 4,
+    title: "Black Adam",
+    movieHall: "PVR22 Mall,Delhi",
+    tickets: ["A5"],
+    amount: 420,
+    userid:1,
+    time: "12:00 PM",
+    date: "12 February",
+  },
+  {
+    movieid: 4,
+    title: "Black Adam",
+    movieHall: "PVR22 Mall,Delhi",
+    tickets: ["B1"],
+    amount: 420,
+    userid:1,
+    time: "09:00 AM",
+    date: "12 February",
+  },
+  {
+    movieid: 4,
+    title: "Black Adam",
+    movieHall: "PVR22 Mall,Delhi",
+    tickets: ["C1", "C5"],
+    amount: 420,
+    userid:1,
+    time: "04:00 PM",
+    date: "12 February",
+  },
+  {
+    movieid: 5,
+    title: "Pathaan",
+    movieHall: "PVR22 Mall,Delhi",
+    tickets: ["D1"],
+    amount: 420,
+    userid:1,
+    time: "06:00 PM",
+    date: "12 February",
+  },
+];
+let users = [
+  {
+    id: 1,
+    email: "test@test.com",
+    fname:'jane',
+    lname:'Doe',
+    phone:7530961944,
+    status:"No"
+  },
+];
+module.exports = { movies, seat, users };
