@@ -11,7 +11,7 @@ var ExtractJwt = require("passport-jwt").ExtractJwt;
 
 var jwt = require("jsonwebtoken");
 var jwt_key = "secretkey6864712";
-const jwtExpiryTime = 300;
+const jwtExpiryTime = 900;
 
 app.use(express.json());
 app.use(cookieParser("achgj-446321"));
@@ -27,14 +27,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-// const corsOptions = {
-//   origin: "http://localhost:3000",
-//   credentials: true,
-//   optionSuccessStatus: 200,
-// };
-
-// app.use(cors(corsOptions));
-
 app.use(passport.initialize());
 
 var port = process.env.PORT || 2410;
@@ -45,54 +37,71 @@ let params = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: "jwtsecret4346445",
 };
-let { products, users, orders,log } = require("./data.js");
+let { movies, seat, users } = require("./data.js");
 
-app.get("/products", function (req, res) {
-  res.send(products);
-});
-app.get("/product/:id", function (req, res) {
-  let id = req.params.id;
-  let arr = products.find((e) => e.id == id);
-  res.send(arr);
-});
-app.get("/products/:category", function (req, res) {
-  let  category  = req.params.category;
+app.get("/movies/:location", function (req, res) {
+  let location = req.params.location;
+  let lang = req.query.lang;
+  let q = req.query.q;
+  let genre = req.query.genre;
+  let format = req.query.format;
+  let newlang = [];
 
-  let arr = products.filter((p) => p.category == category);
-  res.send(arr);
-});
-app.post("/register", function (req, res) {
-  let email = req.body.email;
-  let password = req.body.password;
-  let maxid = users.reduce((acc, curr) => (curr.id > acc ? curr.id : acc), 0);
-  let newid = maxid + 1;
-  let json = { id: newid, email: email, password: password };
-  users.push(json);
-  res.send(json);
-});
+  let arr = movies.filter((e) => e.location == location);
 
-app.post("/login", function (req, res) {
-  let { email, password } = req.body;
-  // console.log(email, password )
-  let user = users.find((u) => u.email === email && u.password === password);
-
-  if (user) {
-    let payload = { id: user.id };
-    let token = jwt.sign(payload, params.secretOrKey, {
-      algorithm: "HS256",
-      expiresIn: jwtExpiryTime,
+  if (lang) {
+    let langArr = lang.split(",");
+    arr = arr.filter((e) => langArr.find((n) => n == e.language));
+  }
+  if (genre) {
+    arr = arr.filter((e) => e.genre.find((l) => l == genre));
+  }
+  if (format) {
+    arr = arr.filter((e) => e.format.find((l) => l == format));
+  }
+  if (q) {
+    arr = arr.filter((e) => {
+      if (e.language.toLowerCase().includes(q.toLowerCase())) {
+        return e;
+      }
+      if (e.title.toLowerCase().includes(q.toLowerCase())) {
+        return e;
+      }
     });
-    // res.setHeader("X-Auth-Token",token)
-    // res.setHeader("Authorization",token)
-    let json = { token: token, id: user.id, email: user.email };
-    res.send(json);
-  } else res.sendStatus(401);
+  }
+  // console.log(arr);
+  res.send(arr);
 });
+app.get("/movies/:location/:id", function (req, res) {
+  let id = req.params.id;
+  let location = req.params.location;
+  let arr = movies.filter((e) => e.location == location);
+  arr = arr.find((e) => e.id == id);
+  res.send(arr);
+});
+
+app.get("/seat/:id/:movieHall", function (req, res) {
+  let id = req.params.id;
+  let movieHall = req.params.movieHall;
+
+  let arr = seat;
+
+  arr = arr.filter((e) => e.movieid == id);
+  arr = arr.filter((e) => e.movieHall == movieHall);
+
+  res.send(arr);
+});
+app.post("/seat", function (req, res) {
+  let body = req.body;
+  seat.push(body);
+  res.send(body);
+});
+// file pass
 
 let strategy = new LocalJwt(params, function (token, done) {
-  console.log("In LocalJwt-all", token);
+  // console.log("In LocalJwt-all", token);
   let user = users.find((u) => u.id == token.id);
-  console.log("User", user);
+  // console.log("User", user);
   if (!user)
     return done(null, false, { message: "Incorrect username or password" });
   else return done(null, user);
@@ -100,65 +109,43 @@ let strategy = new LocalJwt(params, function (token, done) {
 
 passport.use("All", strategy);
 
-app.post("/orders", function (req, res) {
-  let body = req.body;
-  orders.push(body);
-  res.send(body);
-});
-app.post("/log", function (req, res) {
-  let body = req.body;
-  log.push(body);
-  res.send(body);
-});
-app.get("/log", function (req, res) {
+app.post("/loginuser", function (req, res) {
+  let { email } = req.body;
+  let user = users.find((u) => u.email === email);
 
-  res.send(log);
+  if (user) {
+    let payload = { id: user.id };
+    let token = jwt.sign(payload, params.secretOrKey, {
+      algorithm: "HS256",
+      expiresIn: jwtExpiryTime,
+    });
+    res.send(token);
+  } else res.sendStatus(401);
 });
 
-
-app.post("/products", function (req, res) {
-  let body = req.body;
-  let maxid = products.reduce(
-    (acc, curr) => (curr.id > acc ? curr.id : acc),
-    0
-  );
-  let newid = maxid + 1;
-  let json = { id: newid, ...body };
-  products.push(json);
-  res.send(json);
-});
-app.put("/products/:id", function (req, res) {
-  let id = req.params.id;
-  let body = req.body;
-  let index = products.findIndex((e) => e.id == id);
-  if (index >= 0) {
-    products[index] = body;
-    res.send(products[index]);
-  } else res.status(404).send("NO products found");
-});
-app.delete("/products/:id", function (req, res) {
-  let id = req.params.id;
-  let body = req.body;
-  let index = products.findIndex((e) => e.id == id);
-  if (index >= 0) {
-    let deleteProducts = products.splice(index, 1);
-
-    res.send(deleteProducts);
-  } else res.status(404).send("NO products found");
-});
 app.get(
-  "/orders",
+  "/loginuser",
   passport.authenticate("All", { session: false }),
   function (req, res) {
-    try {
-      let order = orders.filter((o) => o.email == req.user.email);
-      res.send(order);
-    } catch (ex) {
-      if (err.response) {
-        let { status, statusText } = err.response;
-        console.log(status, statusText);
-        res.status(status).send(statusText);
-      } else res.status(404).send(err);
-    }
+    // console.log("In Get /user", req.user);
+    res.send(req.user);
   }
 );
+app.get(
+  "/booking",
+  passport.authenticate("All", { session: false }),
+  function (req, res) {
+    let id = req.user.id;
+    let arr = seat;
+    arr = arr.filter((e) => e.userid == id);
+    res.send(arr);
+  }
+);
+app.put("/loginuser/:id", function (req, res) {
+  let id = req.params.id;
+  let body = req.body;
+  let arr = users.findIndex((e) => e.id == id);
+  // console.log(body)
+  users[arr] = body;
+  res.send(body);
+});
