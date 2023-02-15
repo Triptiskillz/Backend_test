@@ -12,7 +12,7 @@ let movies = [
     like: 75,
     showDate: [
       {
-        date: "11 February",
+        date: "15 February",
         place: [
           {
             name: "PVR Mall,Delhi",
@@ -32,7 +32,7 @@ let movies = [
         ],
       },
       {
-        date: "12 February",
+        date: "16 February",
         place: [
           {
             name: "PVR4 Mall,Delhi",
@@ -66,7 +66,7 @@ let movies = [
     like: 77,
     showDate: [
       {
-        date: "11 February",
+        date: "15 February",
         place: [
           {
             name: "PVR7 Mall,Delhi",
@@ -86,7 +86,7 @@ let movies = [
         ],
       },
       {
-        date: "12 February",
+        date: "16 February",
         place: [
           {
             name: "PVR11 Mall,Delhi",
@@ -121,7 +121,7 @@ let movies = [
     like: 67,
     showDate: [
       {
-        date: "11 February",
+        date: "15 February",
         place: [
           {
             name: "PVR14 Mall,Delhi",
@@ -141,7 +141,7 @@ let movies = [
         ],
       },
       {
-        date: "12 February",
+        date: "16 February",
         place: [
           {
             name: "PVR17 Mall,Delhi",
@@ -175,7 +175,7 @@ let movies = [
     like: 88,
     showDate: [
       {
-        date: "11 February",
+        date: "15 February",
         place: [
           {
             name: "PVR Mall,Delhi",
@@ -196,7 +196,7 @@ let movies = [
         ],
       },
       {
-        date: "12 February",
+        date: "16 February",
         place: [
           {
             name: "PVR21 Mall,Delhi",
@@ -216,7 +216,7 @@ let movies = [
         ],
       },
       {
-        date: "13 February",
+        date: "17 February",
         place: [
           {
             name: "PVR24 Mall,Delhi",
@@ -249,7 +249,7 @@ let movies = [
     like: 72,
     showDate: [
       {
-        date: "11 February",
+        date: "15 February",
         place: [
           {
             name: "PVR27 Mall,Delhi",
@@ -269,7 +269,7 @@ let movies = [
         ],
       },
       {
-        date: "12 February",
+        date: "16 February",
         place: [
           {
             name: "PVR30 Mall,Delhi",
