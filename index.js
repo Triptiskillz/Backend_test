@@ -11,7 +11,7 @@ var ExtractJwt = require("passport-jwt").ExtractJwt;
 
 var jwt = require("jsonwebtoken");
 var jwt_key = "secretkey6864712";
-const jwtExpiryTime = 900;
+const jwtExpiryTime = 300;
 
 app.use(express.json());
 app.use(cookieParser("achgj-446321"));
@@ -37,115 +37,152 @@ let params = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: "jwtsecret4346445",
 };
-let { movies, seat, users } = require("./data.js");
+let { mobiles, users } = require("./data.js");
 
-app.get("/movies/:location", function (req, res) {
-  let location = req.params.location;
-  let lang = req.query.lang;
+
+
+app.get("/deals", function (req, res) {
+let newarr=[]
+  let arr = mobiles;
+  arr = arr.slice(1, 14).map((item, i) => {
+    return item
+  });
+  res.send(arr);
+});
+
+app.get("/home/:category/:brand", function (req, res) {
+  let category = req.params.category;
+  let brand = req.params.brand;
+  let arr = mobiles;
+
   let q = req.query.q;
-  let genre = req.query.genre;
-  let format = req.query.format;
-  let newlang = [];
+  let ram = req.query.ram;
+  let assured = req.query.assured;
+  let rating = req.query.rating;
+  let price = req.query.price;
+  let sort = req.query.sort;
 
-  let arr = movies.filter((e) => e.location == location);
+  arr = arr.filter((e) => e.category == category);
+  arr = arr.filter((e) => e.brand == brand);
 
-  if (lang) {
-    let langArr = lang.split(",");
-    arr = arr.filter((e) => langArr.find((n) => n == e.language));
+  if (ram) {
+    let ramArr = ram.split(",");
+    arr = arr.filter((e) => ramArr.find((n) => n.slice(-1) == e.ram));
   }
-  if (genre) {
-    arr = arr.filter((e) => e.genre.find((l) => l == genre));
+  if (rating) {
+    let ratingArr = rating.split(",");
+    arr = arr.filter((e) => ratingArr.find((n) => +n < +e.rating));
+    // console.log(rating)
   }
-  if (format) {
-    arr = arr.filter((e) => e.format.find((l) => l == format));
+  if (price) {
+    let priceArr = price.split(",");
+    arr = arr.filter((e) =>
+      priceArr.find((n) => {
+        let start = n.indexOf("-");
+        if (start == -1) {
+          if (n < e.price) {
+            return e;
+          }
+        } else {
+          let a = n.slice(0, start);
+          let b = n.slice(start + 1, n.length);
+          if (a < e.price && b > e.price) {
+            return e;
+          }
+        }
+      })
+    );
+  }
+  if (assured) {
+    let Newassured =JSON.parse(assured.toLowerCase());
+    arr = arr.filter((e) => e.assured == Newassured);
+  }
+  if (sort) {
+    if (sort === "popularity") {
+      arr.sort((s1, s2) => s1.popularity - s2.popularity);
+    }
+    if (sort === "desc") {
+      arr.sort((s1, s2) => s2.price - s1.price);
+    }
+    if (sort === "asc") {
+      arr.sort((s1, s2) => s1.price - s2.price);
+    }
   }
   if (q) {
     arr = arr.filter((e) => {
-      if (e.language.toLowerCase().includes(q.toLowerCase())) {
-        return e;
-      }
-      if (e.title.toLowerCase().includes(q.toLowerCase())) {
+      if (e.name.toLowerCase().includes(q.toLowerCase())) {
         return e;
       }
     });
   }
-  // console.log(arr);
-  res.send(arr);
-});
-app.get("/movies/:location/:id", function (req, res) {
-  let id = req.params.id;
-  let location = req.params.location;
-  let arr = movies.filter((e) => e.location == location);
-  arr = arr.find((e) => e.id == id);
   res.send(arr);
 });
 
-app.get("/seat/:id/:movieHall", function (req, res) {
-  let id = req.params.id;
-  let movieHall = req.params.movieHall;
 
-  let arr = seat;
 
-  arr = arr.filter((e) => e.movieid == id);
-  arr = arr.filter((e) => e.movieHall == movieHall);
 
-  res.send(arr);
-});
-app.post("/seat", function (req, res) {
-  let body = req.body;
-  seat.push(body);
-  res.send(body);
-});
-// file pass
+app.get("/home/:category", function (req, res) {
+  let category = req.params.category;
+  let arr = mobiles;
 
-let strategy = new LocalJwt(params, function (token, done) {
-  // console.log("In LocalJwt-all", token);
-  let user = users.find((u) => u.id == token.id);
-  // console.log("User", user);
-  if (!user)
-    return done(null, false, { message: "Incorrect username or password" });
-  else return done(null, user);
-});
+  let q = req.query.q;
+  let ram = req.query.ram;
+  let assured = req.query.assured;
+  let rating = req.query.rating;
+  let price = req.query.price;
+  let sort = req.query.sort;
 
-passport.use("All", strategy);
+  arr = arr.filter((e) => e.category == category);
 
-app.post("/loginuser", function (req, res) {
-  let { email } = req.body;
-  let user = users.find((u) => u.email === email);
-
-  if (user) {
-    let payload = { id: user.id };
-    let token = jwt.sign(payload, params.secretOrKey, {
-      algorithm: "HS256",
-      expiresIn: jwtExpiryTime,
+  if (ram) {
+    let ramArr = ram.split(",");
+    arr = arr.filter((e) => ramArr.find((n) => n.slice(-1) == e.ram));
+  }
+  if (rating) {
+    let ratingArr = rating.split(",");
+    arr = arr.filter((e) => ratingArr.find((n) => +n < +e.rating));
+    // console.log(rating)
+  }
+  if (price) {
+    let priceArr = price.split(",");
+    arr = arr.filter((e) =>
+      priceArr.find((n) => {
+        let start = n.indexOf("-");
+        if (start == -1) {
+          if (n < e.price) {
+            return e;
+          }
+        } else {
+          let a = n.slice(0, start);
+          let b = n.slice(start + 1, n.length);
+          if (a < e.price && b > e.price) {
+            return e;
+          }
+        }
+      })
+    );
+  }
+  if (assured) {
+    let Newassured =JSON.parse(assured.toLowerCase());
+    arr = arr.filter((e) => e.assured == Newassured);
+  }
+  if (sort) {
+    if (sort === "popularity") {
+      arr.sort((s1, s2) => s1.popularity - s2.popularity);
+    }
+    if (sort === "desc") {
+      arr.sort((s1, s2) => s2.price - s1.price);
+    }
+    if (sort === "asc") {
+      arr.sort((s1, s2) => s1.price - s2.price);
+    }
+  }
+  if (q) {
+    arr = arr.filter((e) => {
+      if (e.name.toLowerCase().includes(q.toLowerCase())) {
+        return e;
+      }
     });
-    res.send(token);
-  } else res.sendStatus(401);
-});
-
-app.get(
-  "/loginuser",
-  passport.authenticate("All", { session: false }),
-  function (req, res) {
-    // console.log("In Get /user", req.user);
-    res.send(req.user);
   }
-);
-app.get(
-  "/booking",
-  passport.authenticate("All", { session: false }),
-  function (req, res) {
-    let id = req.user.id;
-    let arr = seat;
-    arr = arr.filter((e) => e.userid == id);
-    res.send(arr);
-  }
-);
-app.put("/loginuser/:id", function (req, res) {
-  let id = req.params.id;
-  let body = req.body;
-  let arr = users.findIndex((e) => e.id == id);
-  // console.log(body)
-  users[arr] = body;
-  res.send(body);
+  res.send(arr);
 });
