@@ -210,10 +210,16 @@ app.get("/pincode/:pincode/:productId", function (req, res) {
 
   let arr = pincodes;
   arr = arr.find((e) => e.pincode == pincode);
-  arr = arr.mobileList.find((e) => e.id == productId);
-  // console.log(arr)
+  if (arr != undefined) {
+    arr = arr.mobileList.find((m) => m.id == productId);
+    res.send(arr);
+  }else{
+    res.send('not');
 
-  res.send(arr);
+  }
+  // console.log(arr);
+
+  // console.log(arr)
 });
 
 app.get("/reviews/:productId", function (req, res) {
